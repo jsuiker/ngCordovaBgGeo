@@ -1,5 +1,5 @@
 {
-  "name": "ngCordovaBgGeo",
+  "name": "angularjs-cordova-background-geolocation",
   "description": "cordova-plugin-background-geolocation functions wrapped in promises for AngularJS apps.",
   "main": [
     "ngCordovaBgGeo.js"
