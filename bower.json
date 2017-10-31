@@ -1,0 +1,26 @@
+{
+  "name": "ngCordovaBgGeo",
+  "description": "cordova-plugin-background-geolocation functions wrapped in promises for AngularJS apps.",
+  "main": [
+    "ngCordovaBgGeo.js"
+  ],
+  "authors": [
+    "Jonathan Hartsuiker <jsuiker@vt.edu>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "cordova",
+    "AngularJS",
+    "cordova-plugin-background-geolocation",
+    "hybrid",
+    "mobile"
+  ],
+  "homepage": "https://github.com/jsuiker/ngCordovaBgGeo",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
