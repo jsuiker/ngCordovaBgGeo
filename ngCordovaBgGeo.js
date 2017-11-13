@@ -47,7 +47,7 @@ angular.module('ngCordovaBgGeo', [])
         'powersavechange' //   Fired when the state of the operating-system's "Power Saving" system changes. Your callbackFn will be provided with a Boolean showing whether "Power Saving" is enabled or disabled
       ],
 
-      DESIRED_ACCURACY_HIGH: DESIRED_ACCURACY_HIGH
+      DESIRED_ACCURACY_HIGH: DESIRED_ACCURACY_HIGH,
       DESIRED_ACCURACY_MEDIUM: DESIRED_ACCURACY_MEDIUM,
       DESIRED_ACCURACY_LOW: DESIRED_ACCURACY_LOW,
       DESIRED_ACCURACY_VERY_LOW: DESIRED_ACCURACY_VERY_LOW,
