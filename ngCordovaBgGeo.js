@@ -20,17 +20,17 @@ angular.module('ngCordovaBgGeo', [])
       ) || {};
 
     var
-      DESIRED_ACCURACY_HIGH: 0, // GPS + Wifi + Cellular   Highest power; highest accuracy
-      DESIRED_ACCURACY_MEDIUM: 10, // Wifi + Cellular   Medium power; Medium accuracy;
-      DESIRED_ACCURACY_LOW: 100, // Wifi (low power) + Cellular   Lower power; No GPS
-      DESIRED_ACCURACY_VERY_LOW: 1000, // Cellular only  Lowest power; lowest accuracy
+      DESIRED_ACCURACY_HIGH = 0, // GPS + Wifi + Cellular   Highest power; highest accuracy
+      DESIRED_ACCURACY_MEDIUM = 10, // Wifi + Cellular   Medium power; Medium accuracy;
+      DESIRED_ACCURACY_LOW = 100, // Wifi (low power) + Cellular   Lower power; No GPS
+      DESIRED_ACCURACY_VERY_LOW = 1000, // Cellular only  Lowest power; lowest accuracy
 
-      LOG_LEVEL_OFF: 0,
-      LOG_LEVEL_ERROR: 1,
-      LOG_LEVEL_WARNING: 2,
-      LOG_LEVEL_INFO: 3,
-      LOG_LEVEL_DEBUG: 4,
-      LOG_LEVEL_VERBOSE: 5;
+      LOG_LEVEL_OFF = 0,
+      LOG_LEVEL_ERROR = 1,
+      LOG_LEVEL_WARNING = 2,
+      LOG_LEVEL_INFO = 3,
+      LOG_LEVEL_DEBUG = 4,
+      LOG_LEVEL_VERBOSE = 5;
 
     return {
 
