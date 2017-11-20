@@ -62,35 +62,35 @@ angular.module('ngCordovaBgGeo', [])
       defaultConfig: function() {
         return {
           // Geolocation Common Options
-          desiredAccuracy: 0,
-          distanceFilter: 10,
-          disableElasticity: false,
-          elasticityMultiplier: 1,
-          stopAfterElapsedMinutes: 0,
-          stopOnStationary: false,
-          desiredOdometerAccuracy: 100,
+          desiredAccuracy: 0, // Specify the desired-accuracy of the geolocation system with 1 of 4 values, 0, 10, 100, 1000 where 0 means HIGHEST POWER, HIGHEST ACCURACY and 1000 means LOWEST POWER, LOWEST ACCURACY
+          distanceFilter: 10, // The minimum distance (measured in meters) a device must move horizontally before an update event is generated.
+          disableElasticity: false, // Set true to disable automatic speed-based #distanceFilter elasticity. eg: When device is moving at highway speeds, locations are returned at ~ 1 / km.
+          elasticityMultiplier: 1, // Controls the scale of automatic speed-based distanceFilter elasticity. Increasing elasticityMultiplier will result in few location samples as speed increases.
+          stopAfterElapsedMinutes: 0, // The plugin can optionally automatically stop tracking after some number of minutes elapses after the #start method was called.
+          stopOnStationary: false, // The plugin can optionally automatically stop tracking when the stopTimeout timer elapses.
+          desiredOdometerAccuracy: 100, // Location accuracy threshold in meters for odometer calculations.
 
           // Geolocation iOS Options
-          stationaryRadius: 25,
-          useSignificantChangesOnly: false,
-          locationAuthorizationRequest: 'Always',
-          locationAuthorizationAlert: {},
+          stationaryRadius: 25, // When stopped, the minimum distance the device must move beyond the stationary location for aggressive background-tracking to engage.
+          useSignificantChangesOnly: false, // Defaults to false. Set true in order to disable constant background-tracking and use only the iOS Significant Changes API.
+          locationAuthorizationRequest: 'Always', // The desired iOS location-authorization request, either Always or WhenInUse.
+          locationAuthorizationAlert: {}, // When you configure the plugin locationAuthorizationRequest Always or WhenInUse and the user changes that value in the app's location-services settings or disables location-services, the plugin will display an Alert directing the user to the Settings screen.
           
           // Geolocation Android Options
-          locationUpdateInterval: 1000,
-          fastestLocationUpdateInterval: 10000,
-          deferTime: 0,
+          locationUpdateInterval: 1000, // With distanceFilter: 0, Sets the desired interval for location updates, in milliseconds.
+          fastestLocationUpdateInterval: 10000, // Explicitly set the fastest interval for location updates, in milliseconds.
+          deferTime: 0, // Sets the maximum wait time in milliseconds for location updates to be delivered to your callback, when they will all be delivered in a batch.
           
           // Activity Recognition Common Options
-          activityRecognitionInterval: 10000,
-          stopTimeout: 5,
-          minimumActivityRecognitionConfidence: 75,
-          stopDetectionDelay: 0,
-          disableStopDetection: false,
+          activityRecognitionInterval: 10000, // The desired time between activity detections. Larger values will result in fewer activity detections while improving battery life. A value of 0 will result in activity detections at the fastest possible rate.
+          stopTimeout: 5, // The number of minutes to wait before turning off location-services after the ActivityRecognition System (ARS) detects the device is STILL
+          minimumActivityRecognitionConfidence: 75, // Each activity-recognition-result returned by the API is tagged with a "confidence" level expressed as a %. You can set your desired confidence to trigger a state-change.
+          stopDetectionDelay: 0, // Number of minute to delay the stop-detection system from being activated.
+          disableStopDetection: false, // Disable accelerometer-based Stop-detection System. :warning: Not recommended
           
           // Activity Recognition iOS Options
-          activityType: 'Other',
-          disableMotionActivityUpdates: false,
+          activityType: 'Other', // Presumably, this affects ios GPS algorithm. See Apple docs for more information
+          disableMotionActivityUpdates: false, // Disable iOS motion-activity updates (eg: "walking", "in_vehicle"). This feature requires a device having the M7 co-processor (ie: iPhone 5s and up). :warning: The plugin is HIGHLY optimized to use this for improved battery performance. You are STRONLY recommended to NOT disable this.
 
           // HTTP & Persistence Options
           url: null, // Your server url where you wish to HTTP POST locations to
@@ -108,17 +108,17 @@ angular.module('ngCordovaBgGeo', [])
           maxBatchSize: -1,  // If you've enabled HTTP feature by configuring an #url and batchSync: true, this parameter will limit the number of records attached to each batch.
           maxDaysToPersist: 1,   // Maximum number of days to store a geolocation in plugin's SQLite database.
           maxRecordsToPersist: -1,  // Maximum number of records to persist in plugin's SQLite database. Defaults to -1 (no limit). To disable persisting locations, set this to 0
-          locationsOrderDirection: 'ASC',
+          locationsOrderDirection: 'ASC', // Controls the order that locations are selected from the database (and synced to your server). Defaults to ascending (ASC), where oldest locations are synced first.
 
           // Application Common Options
           debug: true,  // <-- Debug sounds & notifications.
-          stopOnTerminate: false,
-          startOnBoot: true,
-          heartbeatInterval: 60,
-          schedule: undefined,
+          stopOnTerminate: false, // Set false to continue tracking after user teminates the app.
+          startOnBoot: true, // Set to true to enable background-tracking after the device reboots.
+          heartbeatInterval: 60, // Rate in seconds to fire heartbeat events.
+          schedule: undefined, // Defines a schedule to automatically start/stop tracking at configured times
 
           // Application iOS Options
-          preventSuspend: false,
+          preventSuspend: false, // Enable this to prevent iOS from suspending your app in the background while in the stationary state. Must be used in conjunction with a #heartbeatInterval.
 
           // Application Android Options
           foregroundService:  false,  // Set true to make the plugin mostly immune to OS termination due to memory pressure from other apps.
@@ -133,10 +133,10 @@ angular.module('ngCordovaBgGeo', [])
           forceReloadOnGeofence: false,  // Launch your app whenever the #geofence event fires.
           forceReloadOnHeartbeat: false,  // Launch your app whenever the #heartbeat event fires.
           forceReloadOnSchedule: false,  // Launch your app whenever a schedule event fires.
-          forceReloadOnBoot: false,  // If the user reboots the device with the plugin configured for startOnBoot: true, your will app will launch when the device is rebooted.
+          forceReloadOnBoot: false, // If the user reboots the device with the plugin configured for startOnBoot: true, your will app will launch when the device is rebooted.
 
           // Geofencing Options
-          geofenceProximityRadius: 1000,  // Radius in meters to query for geofences within proximity.
+          geofenceProximityRadius: 1000, // Radius in meters to query for geofences within proximity.
           geofenceInitialTriggerEntry: true, // Set false to disable triggering a geofence immediately if device is already inside it.
 
           // Logging & Debug Options
@@ -655,9 +655,6 @@ angular.module('ngCordovaBgGeo', [])
         // logger.error  message   Record a :exclamation: log message into the plugin's log database.
         error: function () {
           var q = $q.defer();
-
-
-
           return q.promise;
         },
         // logger.warn   message   Record a :warning: log message into the plugin's log database.
