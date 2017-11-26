@@ -35,16 +35,68 @@ angular.module('ngCordovaBgGeo', [])
     return {
 
       EVENTS: [
-        'location', //  Fired whenever a new location is recorded.
-        'motionchange', //  Fired when the device changes state between stationary and moving
-        'activitychange', //  Fired when the activity-recognition system detects a change in detected-activity (still, on_foot, in_vehicle, on_bicycle, running)
-        'providerchange', //  Fired when a change in the state of the device's Location Services has been detected. eg: "GPS ON", "Wifi only".
-        'geofence', //  Fired when a geofence crossing event occurs.
-        'geofenceschange', //   Fired when the list of monitored geofences within #geofenceProximityRadius changed
-        'http', //  Fired after a successful HTTP response. response object is provided with status and responseText.
-        'heartbeat', //   Fired each #heartbeatInterval while the plugin is in the stationary state with. Your callback will be provided with a params {} containing the last known location {Object}
-        'schedule', //  Fired when a schedule event occurs. Your callbackFn will be provided with the current state Object.
-        'powersavechange' //   Fired when the state of the operating-system's "Power Saving" system changes. Your callbackFn will be provided with a Boolean showing whether "Power Saving" is enabled or disabled
+        'location',
+        // Fired whenever a new location is recorded.
+        //
+        // successFn Paramters
+        //   @param {Object} location The Location data (@see Wiki for Location Data Schema)
+        //
+        // failureFn Paramters
+        //   @param {Integer} errorCode
+        'motionchange',
+        // Fired when the device changes state between stationary and moving
+        //
+        // callbackFn Paramters
+        //   @param {Boolean} isMoving
+        //   @param {Object} location The location at the state-change.
+        'activitychange',
+        // Fired when the activity-recognition system detects a change in detected-activity (still, on_foot, in_vehicle, on_bicycle, running)
+        //
+        // callbackFn Parameters
+        //   @param {event} An object containing the following properties:
+        //    {String} activity [still|on_foot|running|on_bicycle|in_vehicle]
+        //    {Integer} confidence [0-100%]
+        'providerchange',
+        // Fired when a change in the state of the device's Location Services has been detected. eg: "GPS ON", "Wifi only".
+        //
+        // callbackFn Paramters
+        //   @param {Boolean} enabled Whether location-services is enabled
+        //   @param {Boolean} gps Whether gps is enabled
+        //   @param {Boolean} network Whether wifi geolocation is enabled.
+        //   @param {Integer} status Location authorization status.
+        'geofence',
+        // Fired when a geofence crossing event occurs.
+        //
+        // calbackFn Parameters
+        //   @param {Object} geofence The geofence data, including identifier, action, extras, location
+        'geofenceschange',
+        // Fired when the list of monitored geofences within #geofenceProximityRadius changed
+        //
+        // callbackFn Paramters
+        //   @param {Array} on The list of geofences just activated.
+        //   @param {Array} off The list of geofences just de-activated
+        'http',
+        // Fired after a successful HTTP response. response object is provided with status and responseText.
+        //
+        // successFn, failureFn Paramters
+        //   @param {Integer} status. The HTTP status
+        //   @param {String} responseText The HTTP response as text.
+        'heartbeat',
+        // Fired each #heartbeatInterval while the plugin is in the stationary state with. Your callback will be provided with a params {} containing the last known location {Object}
+        //
+        // callbackFn Paramters
+        //   @param {String} motionType [still|on_foot|running|on_bicycle|in_vehicle|shaking|unknown] The current motion-type.
+        //   @param {Object} location When the plugin detects movement (iOS only), it will always request a new high-accuracy location in order to determine if the device has moved beyond stationaryRadius and if the location has speed > 0. This fresh location will be provided to your callbackFn. Android will simply return the "last known location"
+        'schedule',
+        // Fired when a schedule event occurs. Your callbackFn will be provided with the current state Object. 
+        //
+        // callbackFn Paramters
+        //   @param {Object} state Current plugin state.
+        'powersavechange'
+        // Fired when the state of the operating-system's "Power Saving" system changes. Your callbackFn will be provided with a Boolean showing whether "Power Saving" is enabled or disabled
+        //
+        // callbackFn Paramters
+        //   @param {Boolean} isPowerSaveMode
       ],
 
       DESIRED_ACCURACY_HIGH: DESIRED_ACCURACY_HIGH,
@@ -71,7 +123,7 @@ angular.module('ngCordovaBgGeo', [])
           desiredOdometerAccuracy: 100, // Location accuracy threshold in meters for odometer calculations.
 
           // Geolocation iOS Options
-          stationaryRadius: 25, // When stopped, the minimum distance the device must move beyond the stationary location for aggressive background-tracking to engage.
+          stationaryRadius: 25, // When stopped, the minimum distance (in meters) the device must move beyond the stationary location for aggressive background-tracking to engage.
           useSignificantChangesOnly: false, // Defaults to false. Set true in order to disable constant background-tracking and use only the iOS Significant Changes API.
           locationAuthorizationRequest: 'Always', // The desired iOS location-authorization request, either Always or WhenInUse.
           locationAuthorizationAlert: {}, // When you configure the plugin locationAuthorizationRequest Always or WhenInUse and the user changes that value in the app's location-services settings or disables location-services, the plugin will display an Alert directing the user to the Settings screen.
@@ -183,20 +235,16 @@ angular.module('ngCordovaBgGeo', [])
       },
 
       // on  event,successFn,failureFn   Adds an event-listener
-      on: function (event) {
-        var q = $q.defer();
-
+      on: function (event, cb) {
         BackgroundGeolocation.on(
           event,
           function successCb(result) {
-            q.notify(null, result);
+            cb(null, result);
           },
           function failureCb(err) {
-            q.notify(err, null);
+            cb(err, undefined);
           }
         );
-
-        return q.promise;
       },
 
       // un  event,callbackFn,   Removes an event-listener
@@ -703,19 +751,3 @@ angular.module('ngCordovaBgGeo', [])
 ]);
 
 })();
-
-// setLogLevel   Integer, callbackFn   Set the Log filter: LOG_LEVEL_OFF, LOG_LEVEL_ERROR, LOG_LEVEL_WARNING, LOG_LEVEL_INFO, LOG_LEVEL_DEBUG, LOG_LEVEL_VERBOSE
-// getLog  callbackFn  Fetch the entire contents of the current log database as a String.
-// destroyLog  callbackFn, failureFn   Destroy the contents of the Log database.
-// emailLog  email, callbackFn   Fetch the entire contents of Log database and email it to a recipient using the device's native email client.
-// getSensors  callbackFn, failureFn   Returns the presense of device sensors accelerometer, gyroscope, magnetometer, in addition to iOS/Android-specific sensors
-// logger.error  message   Record a :exclamation: log message into the plugin's log database.
-// logger.warn   message   Record a :warning: log message into the plugin's log database.
-// logger.debug  message   Record a :beetle: log message into the plugin's log database.
-// logger.info   message   Record a :information_source: log message into the plugin's log database.
-// logger.notice   message   Record a :large_blue_circle: log message into the plugin's log database.
-// logger.header   message   Record a header log message into the plugin's log database.
-// logger.on   message   Record a :tennis: log message into the plugin's log database.
-// logger.off  message   Record a :red_circle: log message into the plugin's log database.
-// logger.ok   message   Record a :white_check_mark: log message into the plugin's
-// playSound   Integer   Here's a fun one. The plugin can play a number of OS system sounds for each platform. For IOS and Android. I offer this API as-is, it's up to you to figure out how this works.
